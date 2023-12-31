@@ -1,0 +1,32 @@
+
+  .btn {
+    background-color: #D2B48C; /* Цвет фона кнопок */
+    color: #FFF; /* Цвет текста кнопок */
+  }
+  .btn:hover {
+  background-color: #FFA500;
+}
+  .navbar {
+    background-color: #6b8e23; /* Цвет шапки */
+  }
+  .navbar-nav .nav-link {
+  color: white;
+  }
+  /* Применение стиля при наведении на текст */
+  .navbar-nav .nav-link:hover {
+    color: orange; /* Сделать цвет текста серым при наведении */
+    text-decoration: underline; /* Добавить подчеркивание */
+  }
+
+  footer {
+    background-color: #D2B48C; /* Цвет футера */
+    color: #FFF; /* Цвет текста футера */
+  }
+  .modal-content {
+    color: #000; /* Цвет текста футера */
+  }
+  .alert {
+    display: none; /* Скрыть область для всплывающих уведомлений */
+  }
+  .close {
+  }
