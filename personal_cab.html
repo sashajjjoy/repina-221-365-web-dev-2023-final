@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,19 +8,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <title>Личный кабинет</title>
-  <style>
-    /* Дополнительные стили */
-    .table-cell {
-      vertical-align: middle;
-    }
-  </style>
+
 </head>
 <body>
   <header class="position-sticky border-bottom border-Light">
       <nav class="navbar navbar-expand-lg ">
           <div class="container py-2">
-            <img src="./images/logo.png" alt="Логотип" style="width: 48px;">
-            <h2 class="ps-2 text-light fw-bold">TOPMOSKVA</h2>
+            <img src="./logo.png" alt="Логотип" style="width: 48px;">
+            <h2 class="ps-2 text-light fw-bold">Московские шаги</h2>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="true">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,15 +25,13 @@
                   <a class="nav-link"  href="index.html">Главная</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#stack">О компании</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#requestModal">Оставить заявку</a>
+                  <a class="nav-link" href="#" data-toggle="modal" data-target="#requestModal">Оставить заявку</a>
                 </li>
               </ul>
             </div>
           </div>
       </nav>
+    </header>
     </header>
 
   <div class="container mt-3">
@@ -65,9 +59,9 @@
           <td>01.01.2023</td>
           <td>$100</td>
           <td class="table-cell">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailsModal">Подробнее</button>
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal">Редактировать</button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Удалить</button>
+            <button type="button" class="btn" data-toggle="modal" data-target="#requestModal_more">Подробнее</button>
+            <button type="button" class="btn" data-toggle="modal" data-target="#requestModal_change">Редактировать</button>
+            <button type="button" class="btn" data-toggle="modal" data-target="#deleteModal">Удалить</button>
           </td>
         </tr>
         <!-- Добавьте остальные строки с данными заявок здесь -->
@@ -89,22 +83,78 @@
     </nav>
   </div>
 
-  <!-- Модальные окна для действий с заявками -->
-  <!-- Модальное окно для подробной информации о заявке -->
-  <div class="modal" tabindex="-1" role="dialog" id="detailsModal">
-    <!-- Заполните модальное окно подробной информацией о заявке -->
-  </div>
+   <!-- Форма для редактирования данных -->
+  <div class="modal" tabindex="-1" role="dialog" id="requestModal_change">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">Редактировние заявки</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <!-- Форма для ввода данных -->
+         <form>
+           <div class="form-group">
+             <label for="routeName1">Название маршрута:</label>
+             <input type="text" class="form-control" id="routeName1" readonly>
+           </div>
+           <div class="form-group">
+             <label for="guideName1">ФИО гида:</label>
+             <input type="text" class="form-control" id="guideName1" readonly>
+           </div>
+           <div class="form-group">
+             <label for="excursionDate1">Дата экскурсии:</label>
+             <input type="date" class="form-control" id="excursionDate1">
+           </div>
+           <div class="form-group">
+             <label for="excursionTime1">Время начала экскурсии:</label>
+             <input type="time" class="form-control" id="excursionTime1">
+           </div>
+           <div class="form-group">
+             <label for="excursionDuration1">Длительность экскурсии:</label>
+             <select class="form-control" id="excursionDuration1">
+               <option value="1">1 час</option>
+               <option value="2">2 часа</option>
+               <option value="3">3 часа</option>
+               <!-- Другие варианты продолжительности -->
+             </select>
+           </div>
+           <div class="form-group">
+             <label for="groupSize1">Количество человек в группе:</label>
+             <input type="number" class="form-control" id="groupSize1">
+           </div>
+           <div class="form-group">
+             <label>Дополнительные опции заказа:</label>
+             <div class="form-check">
+               <input type="checkbox" class="form-check-input" id="additionalOption11">
+               <label class="form-check-label" for="additionalOption11">Скидка 25% пенсионерам</label>
+             </div>
+             <div class="form-check">
+               <input type="checkbox" class="form-check-input" id="additionalOption12">
+               <label class="form-check-label" for="additionalOption12"> Тематические сувениры для посетителей. Стоимость +500руб с каждого человка</label>
+             </div>
+             <!-- Другие дополнительные опции -->
+           </div>
+           <div class="form-group">
+             <label for="totalCost1">Итоговая стоимость:</label>
+             <input type="text" class="form-control" id="totalCost1" readonly>
+           </div>
+           <button type="submit" class="btn">Сохранить</button>
+           <button type="button" class="btn">Отмена</button>
+         </form>
+       </div>
+     </div>
+     </div>
+   </div>
 
-  <!-- Модальное окно для редактирования заявки -->
-  <div class="modal" tabindex="-1" role="dialog" id="editModal">
-    <!-- Заполните модальное окно формой редактирования заявки -->
-  </div>
-
-  <div class="modal" tabindex="-1" role="dialog" id="requestModal">
+<!-- Форма для просмотра данных -->
+  <div class="modal" tabindex="-1" role="dialog" id="requestModal_more">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <h5 class="modal-title">Форма для оформления заявки</h5>
+           <h5 class="modal-title">Редактировние заявки</h5>
            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <span aria-hidden="true">&times;</span>
            </button>
@@ -113,24 +163,24 @@
            <!-- Форма для ввода данных -->
            <form>
              <div class="form-group">
-               <label for="routeName">Название маршрута:</label>
-               <input type="text" class="form-control" id="routeName" readonly>
+               <label for="routeName2">Название маршрута:</label>
+               <input type="text" class="form-control" id="routeName2" readonly>
              </div>
              <div class="form-group">
-               <label for="guideName">ФИО гида:</label>
-               <input type="text" class="form-control" id="guideName" readonly>
+               <label for="guideName2">ФИО гида:</label>
+               <input type="text" class="form-control" id="guideName2" readonly>
              </div>
              <div class="form-group">
-               <label for="excursionDate">Дата экскурсии:</label>
-               <input type="date" class="form-control" id="excursionDate">
+               <label for="excursionDate2">Дата экскурсии:</label>
+               <input type="date" class="form-control" id="excursionDate2" readonly>
              </div>
              <div class="form-group">
-               <label for="excursionTime">Время начала экскурсии:</label>
-               <input type="time" class="form-control" id="excursionTime">
+               <label for="excursionTime2">Время начала экскурсии:</label>
+               <input type="time" class="form-control" id="excursionTime2" readonly>
              </div>
              <div class="form-group">
-               <label for="excursionDuration">Длительность экскурсии:</label>
-               <select class="form-control" id="excursionDuration">
+               <label for="excursionDuration2">Длительность экскурсии:</label>
+               <select class="form-control" id="excursionDuration2">
                  <option value="1">1 час</option>
                  <option value="2">2 часа</option>
                  <option value="3">3 часа</option>
@@ -138,31 +188,55 @@
                </select>
              </div>
              <div class="form-group">
-               <label for="groupSize">Количество человек в группе:</label>
-               <input type="number" class="form-control" id="groupSize">
+               <label for="groupSize2">Количество человек в группе:</label>
+               <input type="number" class="form-control" id="groupSize2" readonly>
              </div>
              <div class="form-group">
                <label>Дополнительные опции заказа:</label>
-               <div class="form-check">
-                 <input type="checkbox" class="form-check-input" id="additionalOption1">
-                 <label class="form-check-label" for="additionalOption1">Опция 1</label>
-               </div>
-               <div class="form-check">
-                 <input type="checkbox" class="form-check-input" id="additionalOption2">
-                 <label class="form-check-label" for="additionalOption2">Опция 2</label>
-               </div>
+
                <!-- Другие дополнительные опции -->
              </div>
              <div class="form-group">
-               <label for="totalCost">Итоговая стоимость:</label>
-               <input type="text" class="form-control" id="totalCost" readonly>
+               <label for="totalCost2">Итоговая стоимость:</label>
+               <input type="text" class="form-control" id="totalCost2" readonly>
              </div>
-             <button type="submit" class="btn btn-primary" style="background-color: orange; color: black;">Отправить</button>
-             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: orange; color: black;">Отмена</button>
            </form>
          </div>
        </div>
      </div>
    </div>
 
-  <!-- Модальное окно для подт
+<!-- удаление заявки -->
+  <div class="modal" tabindex="-1" role="dialog" id="deleteModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Удаление заявки</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите удалить заявку?</p>
+        </div>
+        <div class="modal-footer">
+          <button id="confirmDelete" class="btn ">Да</button>
+          <button id="cancelDelete" class="btn " data-dismiss="modal">Нет</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <!-- Футер сайта -->
+    <div class="text-center fw-bold text-white py-5">
+      @sashajjjoy 2023
+    </div>
+
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
