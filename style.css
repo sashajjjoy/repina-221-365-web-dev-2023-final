@@ -1,13 +1,16 @@
-
   .btn {
-    background-color: #D2B48C; /* Цвет фона кнопок */
+    background-color: #D2B48C; /* Цвет светло-коричневый */
     color: #FFF; /* Цвет текста кнопок */
   }
   .btn:hover {
-  background-color: #FFA500;
+  background-color: #FFA500; /*цвет оранжевй*/
 }
+  #app{
+  background-color: #6b8e23;
+  color: #FFF;
+  }
   .navbar {
-    background-color: #6b8e23; /* Цвет шапки */
+    background-color: #6b8e23; /* Цвет оливковый */
   }
   .navbar-nav .nav-link {
   color: white;
@@ -19,7 +22,7 @@
   }
 
   footer {
-    background-color: #D2B48C; /* Цвет футера */
+    background-color: #654321; /* Цвет темно-коричневый */
     color: #FFF; /* Цвет текста футера */
   }
   .modal-content {
@@ -28,5 +31,15 @@
   .alert {
     display: none; /* Скрыть область для всплывающих уведомлений */
   }
-  .close {
+
+#selectedRouteGuides {
+    display:none;
+}
+
+.table-cell {
+  vertical-align: middle;
+}
+
+.pagination .page-link {
+    color: #654321; /* Темно-коричневый цвет текста */
   }
