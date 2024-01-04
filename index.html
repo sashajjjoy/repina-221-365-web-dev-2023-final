@@ -29,7 +29,7 @@
                   <a class="nav-link" href="#app">О компании</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#" data-toggle="modal" data-target="#requestModal">Оставить заявку</a>
+                  <a class="nav-link" href="#selectedRoutes" >Оставить заявку</a>
                 </li>
               </ul>
             </div>
@@ -39,7 +39,6 @@
 
   <!-- Область для всплывающих уведомлений (alerts) -->
   <div class="container">
-
     <div class="alert alert-primary" role="alert">
       Всплывающее уведомление</div>
   </div>
@@ -54,9 +53,10 @@
             Экскурсии и бла-бла:)
             Открой москву шаг за шагом!
         </p>
-        <button type="button" class="btn " data-toggle="modal" data-target="#requestModal">
-          Оформить заявку
+        <button type="button" class="btn" onclick="window.location.href='#selectedRoutes'">
+            Оформить заявку
         </button>
+
       </div>
       <div class="col-md-6 text-center">
         <img class="w-100" src="main.jpg">
@@ -87,7 +87,7 @@
 
 
   <div class="container py-5 mb-1">
-    <!-- Форма для поиска маршрутов -->
+    <!-- Форма для поиска маршрутов Должен быть предусмотрен пункт «Не выбрано»-->
     <form>
       <div class="form-row">
         <div class="col-md-6 order-md-1 "> <!-- Изменено для перемещения блока влево на medium и больших устройствах -->
@@ -108,7 +108,10 @@
     </form>
   </div>
 
-<!-- Таблица с данными о маршрутах -->
+<!-- Таблица с данными о маршрутах При нажатии на кнопку выбора маршрута, строка, соответствующая выбранному маршруту в
+таблице, должна быть выделена другим цветом. Выбор не должен сбрасываться при переходе
+на другую страницу или при выполнении поиска. -->
+<section id="selectedRoutes" >
   <div class="container py-1 table-responsive">
     <table class="table">
       <thead>
@@ -131,40 +134,85 @@
       </tbody>
     </table>
   </div>
+  <script>
+  $(document).ready( function () {
+    $('#routeTable').DataTable({
+      "paging": true,
+      "pageLength": 10
+    });
+  });
+  </script>
+</section>
 
-     <!-- Выбор гида- открывается при нажатии на кнопку выбора маршрута -->
+<!-- Выбор гида- открывается при нажатии на кнопку выбора маршрута. Над таблицей должны автоматически формироваться фильтры с выбором языка гида и опыта
+работы. Фильтры формируются на основании всех полученных с сервера данных. Выбор
+языка реализуются в виде выпадающего списка (должен быть предусмотрен пункт «Не
+выбрано»), указание опыта – с помощью текстовых полей «от» и «до». -->
   <section id="selectedRouteGuides" >
-      <h2>Выбранный маршрут:
-        <span id="selectedRouteName"></span>
-      </h2>
-        <ul id="guidesList">
-          <!-- Здесь будет отображаться список доступных гидов -->
-        </ul>
-    <form>
-      <div class="form-row">
-        <div class="col">
-          <label for="languageSelect">Знание иностранных языков:</label>
-          <select class="form-control" id="languageSelect">
-            <!-- Опции для выбора языков -->
-          </select>
-        </div>
-        <div class="col">
-          <label for="experienceFrom">Опыт работы (от):</label>
-          <input type="number" class="form-control" id="experienceFrom">
-        </div>
-        <div class="col">
-          <label for="experienceTo">Опыт работы (до):</label>
-          <input type="number" class="form-control" id="experienceTo">
-        </div>
-        <div class="col">
-          <button type="submit" class="btn btn-primary">Поиск</button>
+          <!-- Здесь будет отображаться список доступных гидов При нажатии на кнопку выбора гида, строка, соответствующая выбранному гиду в таблице,
+должна быть выделена другим цветом. Выбор не должен сбрасываться при переходе на
+другую страницу или при выполнении поиска-->
+    <div class="container py-5 mb-1">
+      <div class="row">
+        <div class="col-lg-8">
+          <h2>Выбранный маршрут: <span id="selectedRouteName"></span></h2>
         </div>
       </div>
-    </form>
+      <form>
+        <div class="form-row">
+          <div class="col-lg-3">
+            <label for="languageSelect">Знание иностранных языков:</label>
+            <select class="form-control" id="languageSelect">
+              <!-- Опции для выбора языков -->
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <label for="experienceFrom">Опыт работы (от):</label>
+            <input type="number" class="form-control" id="experienceFrom" min="0">
+          </div>
+          <div class="col-lg-3">
+            <label for="experienceTo">Опыт работы (до):</label>
+            <input type="number" class="form-control" id="experienceTo" min="0">
+          </div>
+          <div class="col-lg-3">
+            <button type="submit" class="btn btn-primary">Поиск</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+
+    <div class="container py-1 table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Картинка профиля</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Языки</th>
+            <th scope="col">Опыт работы</th>
+            <th scope="col">Стоимость</th>
+            <th scope="col">Выбор гида</th>
+          </tr>
+        </thead>
+        <tbody id="guidesList">
+          <!-- Добавьте данные о гидах в соответствии со столбцами -->
+          <tr>
+            <td>Изображение</td>
+            <td>ФИО гида</td>
+            <td>Список языков</td>
+            <td>Опыт работы</td>
+            <td>Стоимость</td>
+            <td>< <button type="button" class="btn " data-toggle="modal" data-target="#requestModal">Выбрать</button></td>
+          </tr>
+          <!-- Добавьте остальные строки с данными о гидах здесь -->
+        </tbody>
+      </table>
+    </div>
   </section>
 
 
- <!-- Форма для ввода данных -->
+ <!-- Форма для ввода данных ОГРАНИЧЕНИЯ на время и дату НЕ РАБОТАЮТ-->
   <div class="modal" tabindex="-1" role="dialog" id="requestModal">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
@@ -187,11 +235,11 @@
              </div>
              <div class="form-group">
                <label for="excursionDate">Дата экскурсии:</label>
-               <input type="date" class="form-control" id="excursionDate">
+               <input type="date" class="form-control" id="excursionDate" min="2024-01-01">
              </div>
              <div class="form-group">
                <label for="excursionTime">Время начала экскурсии:</label>
-               <input type="time" class="form-control" id="excursionTime">
+               <input type="time" class="form-control" id="excursionTime" min="09:00" max="23:00" step="1800">
              </div>
              <div class="form-group">
                <label for="excursionDuration">Длительность экскурсии:</label>
@@ -204,7 +252,7 @@
              </div>
              <div class="form-group">
                <label for="groupSize">Количество человек в группе:</label>
-               <input type="number" class="form-control" id="groupSize">
+               <input type="number" class="form-control" id="groupSize" min="1" max="20">
              </div>
              <div class="form-group">
                <label>Дополнительные опции заказа:</label>
@@ -243,6 +291,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
 </body>
 </html>
 
