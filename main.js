@@ -1,7 +1,6 @@
 'use strict'
-// Максимальное количество записей,расположенных на одной странице равно 10 – для маршрутов и 5 – для заявокСоздание заявки
+// Максимальное количество записей,расположенных на одной странице равно 10 – для маршрутов и 5 – для заявок
 //Репина Александра Денисовна, ваш ключ для доступа к API: 85edf5b1-45a5-4799-8a73-a694b53e3228
-//??создание запроса
 
 const API_KEY = '85edf5b1-45a5-4799-8a73-a694b53e3228';
 const url = 'http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes';
@@ -13,10 +12,17 @@ const itemsPerPage = 5;
 let currentPage = 1;
 
 window.onload = function() {
-
+  document.getElementById('submit_btn').onclick = SubmitOrder;
   document.getElementById('guide-input-expfrom').oninput = guideOptions;
   document.getElementById('guide-input-expto').oninput = guideOptions;
   document.getElementById('select_language').onchange = guideOptions;
+  document.getElementById('excursion_start_time').onchange = change_price_of_excursion
+  document.getElementById('excursionDuration').onchange = change_price_of_excursion
+  document.getElementById('excursionDate').onchange = change_price_of_excursion
+  document.getElementById('groupSize').onchange = change_price_of_excursion
+  document.getElementById('additionalOption1').onchange = change_price_of_excursion
+  document.getElementById('additionalOption2').onchange = change_price_of_excursion
+
   const table = document.querySelector('.table');
   table.addEventListener('click', clickHandler);
   fetchRoutesFromApi();
@@ -28,7 +34,6 @@ function displaySuccessNotification(message) {
   alertDiv.classList.add('alert', 'alert-success');
   alertDiv.role = 'alert';
   alertDiv.textContent = message;
-  document.querySelector('.container').appendChild(alertDiv);
 }
 
 function displayErrorNotification(message) {
@@ -37,48 +42,96 @@ function displayErrorNotification(message) {
   alertDiv.classList.add('alert', 'alert-danger');
   alertDiv.role = 'alert';
   alertDiv.textContent = message;
-  document.querySelector('.container').appendChild(alertDiv);
 }
 
+async function SubmitOrder()
+{
+  const data = {
+  guide_id: 1,
+  route_id: 1,
+  totalCost: document.getElementById('totalCost').value,
+  excursion_start_time :document.getElementById('excursion_start_time').value,
+  excursionDate : document.getElementById('excursionDate').value,
+  excursionDuration : document.getElementById('excursionDuration').value,
+  groupSize: document.getElementById('groupSize').value,
+  guidecost : document.getElementById('guidecost').value,
+  IsdiscountForPensioners :document.getElementById('additionalOption1').checked ? 1 : 0,
+  IsthematicSouvenirs : document.getElementById('additionalOption2').checked ? 1 : 0,
+    };
+
+  const formData = new FormData();
+  for (const key in data) {
+      formData.append(key, data[key]);
+  }
+  
+  try {
+    const response = await fetch(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${API_KEY}`, {
+        method: "POST",
+        body: formData
+    });
+    const data = await response.json();
+    if (data && typeof data === 'object') {
+      displaySuccessNotification(`Вы успешно оформили заявку! ID вашей заявки: ${data.id}`);
+      alert(отправлено)
+    }
+    
+
+} catch (error) {
+    console.error('Ошибка:', error);
+}
+}
 
 //Счет цены- это понятно, но со временем и датой непонятно
-function calculatePrice(guideServiceCost, hoursNumber, isThisDayOff, isItMorning, isItEvening, numberOfVisitors, includeSnacksAndDrinks, discountForPensioners, thematicSouvenirs) {
+function calculatePrice(guideServiceCost, hoursNumber, StartTime, DateOfExcurison, numberOfVisitors, IsdiscountForPensioners, IsthematicSouvenirs) {
   // Рассчет основной стоимости
-  let price = guideServiceCost * hoursNumber * isThisDayOff + isItMorning + isItEvening + (numberOfVisitors * 1000);
+   let DayOffs =["01-01", "01-02", "01-03", "01-04", "01-05", "01-06", "01-07", "01-08", "02-23", "03-08", "05-01", "05-09", "06-12", "11-04"]
+   console.log(DateOfExcurison)
+   const  Coef_DayOff = 1.5;
+   const Coef_discountForPensioners = 500;
+   const Coef_thematicSouvenirs= 0.75;
+   console.log("StartTime "+StartTime);
+   console.log("StartTime slice "+StartTime.slice(0,-3));
+   let start_hour = StartTime.slice(0,-3);
 
-      if (isItMorning >= 9 && isItMorning <= 12) {
+  //let price = guideServiceCost * hoursNumber * isThisDayOff + isItMorning + isItEvening + (numberOfVisitors * 1000);
+
+    let price = guideServiceCost
+     price = price * hoursNumber;
+     console.log("start h"+start_hour);
+      if (start_hour >= 9 && start_hour <= 12) {
+    
         price += 400;
       }
 
-      if (ItEvening >= 20 && isItEvening <= 23) {
-        price = 1000;
+      else if (start_hour >= 20 && start_hour <= 23) {
+        price += 1000;
       }
-
-      if (isThisDayOff === 'weekday') {
-        price *= 1;
-      } else {
+      let DateOfExcurisonDateFormat = new Date(DateOfExcurison) 
+      console.log(DateOfExcurisonDateFormat.getDay())
+      console.log(DateOfExcurison.slice(5))
+      if (DateOfExcurisonDateFormat.getDay()==0 || DateOfExcurisonDateFormat.getDay()==6 || DayOffs.includes(DateOfExcurison.slice(5))) {
         price *= 1.5;
-      }
-
+      } 
+      console.log("numberOfVisitors"+numberOfVisitors);
       if (numberOfVisitors >= 1 && numberOfVisitors <= 5) {
         price += 0;
       } 
-      else if (numberOfVisitors == 5 && numberOfVisitors <= 10) {
+      else if (numberOfVisitors >= 5 && numberOfVisitors <= 10) {
         price += 1000;
       }
       else if (numberOfVisitors > 10 && numberOfVisitors <= 20) {
         price += 1500;
       }
 
-      if (discountForPension) {
-        price *= 0.75;
+      if (IsdiscountForPensioners) {
+        price *= Coef_thematicSouvenirs;
       }
 
-      if (thematicSouvenirs) {
-        price += (numberOfVisitors * 500);
+      if (IsthematicSouvenirs) {
+        price += (numberOfVisitors * Coef_discountForPensioners);
       }
 
-  return price;
+  return Math.round(price);
 }
 
 function clearFormFields() {
@@ -97,22 +150,21 @@ function clearFormFields() {
 
   // Отображение модального окна
  // Найти кнопку, по которой будет открываться модальное окно
-var button = document.querySelector('button[data-target="#requestModal"]');
 
 // Назначить обработчик события по клику на кнопку
 
-function show_model_window()
+function show_model_window(guide_name, guide_cost)
 {
   // Найти модальное окно
   var modal = document.querySelector('#requestModal');
   // Отобразить модальное окно
   let routeNameInput = document.getElementById('guideName');
-  routeNameInput.value = button.id;
-  fill_routeName_in_model_window(button)
+  let guidecost = document.getElementById('guidecost');
+  routeNameInput.value = guide_name
+  guidecost.value = guide_cost
  $(modal).modal('show');
 }
 
-button.addEventListener('click', show_model_window);
 
 
 function fill_routeName_in_model_window(route_name)
@@ -123,7 +175,30 @@ function fill_routeName_in_model_window(route_name)
 
 }
 
+function change_price_of_excursion()
+{
+  let totalCost = document.getElementById('totalCost')
+  let excursion_start_time = document.getElementById('excursion_start_time').value
+  let excursionDate = document.getElementById('excursionDate').value 
+  let excursionDuration =  document.getElementById('excursionDuration').value
+  let groupSize = document.getElementById('groupSize').value
+  let guidecost = document.getElementById('guidecost').value
+  let IsdiscountForPensioners = document.getElementById('additionalOption1').checked
+  let IsthematicSouvenirs = document.getElementById('additionalOption2').checked
 
+  console.log(excursion_start_time)
+  console.log(excursionDate)
+  console.log(excursionDuration)
+  console.log(groupSize)
+  console.log(additionalOption1)
+  console.log(additionalOption2)
+  console.log(guidecost)
+
+  if(excursion_start_time!= 0 && excursionDuration!= 0 && 20 >= groupSize>= 1)
+  {
+    totalCost.value = calculatePrice(guidecost,excursionDuration,excursion_start_time,excursionDate,groupSize,IsdiscountForPensioners,IsthematicSouvenirs)
+  }
+}
 //заполнение таблицы гидов
 
   
@@ -312,14 +387,15 @@ function guideDownload(id) {
         for (let i in response) {
             console.log(i, 'id guid')
             let row = document.createElement("tr");
+            console.log(response[i].name)
             row.innerHTML = `
-            <th scope="col" id = "${response[i].name}" name = "${i}"><img src="imgs/1.png"></th>
+            <th scope="col" id = "${response[i].name}" name = "${i}"><img src="pic.jpg"></th>
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].name}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].language}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].workExperience}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].pricePerHour}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">
-            <button type="button" id = "${response[i].name}" class="btn " data-toggle="modal" data-target="#requestModal">Выбрать</button></th> 
+            <button type="button" id = "guide_btn" name ="${response[i].name}" value = "${response[i].pricePerHour}"  class="btn " data-toggle="modal" data-target="#requestModal">Выбрать</button></th> 
             `; //  в последнее значение класса, где кнопка, надо будет сунуть свое значение стиля))
             if ((document.getElementById('guide-input-expfrom').value != '' &&
             document.getElementById('guide-input-expfrom').value > response[i].workExperience) ||
@@ -331,6 +407,12 @@ function guideDownload(id) {
             guideTable.append(row);
             arroption.push(response[i].language);
         }
+        let guide_buttons = document.querySelectorAll('#guide_btn');
+
+        for(let i = 0; i< guide_buttons.length; i++){
+          guide_buttons[i].addEventListener('click', () => show_model_window(guide_buttons[i].name, guide_buttons[i].value))
+        }
+        
         console.log(arroption);
         createselect(getoptionforselect(arroption));
         });
@@ -404,7 +486,3 @@ function getIDguide(id){
     console.log(id)
     return id
 }
-
-
-
-
