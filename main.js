@@ -6,11 +6,22 @@ const API_KEY = '85edf5b1-45a5-4799-8a73-a694b53e3228';
 const url = 'http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes';
 
 let routesData;
+let selected_guide = [
+  { id: 0, /* другие свойства */ },
+  { language: 0, /* другие свойства */ },
+  { name: "Jhon Down", /* другие свойства */ },
+  { pricePerHour: 0, /* другие свойства */ },
+  { route_id: 0, /* другие свойства */ },
+  { workExperience: 0, /* другие свойства */ },
+
+];
+
+let guides_on_the_route;
 let filteredRoutes;
   
 const itemsPerPage = 5;
 let currentPage = 1;
-
+let selected_route_id;
 window.onload = function() {
   document.getElementById('submit_btn').onclick = SubmitOrder;
   document.getElementById('guide-input-expfrom').oninput = guideOptions;
@@ -28,13 +39,6 @@ window.onload = function() {
   fetchRoutesFromApi();
 }
 
-function displaySuccessNotification(message) {
-  // Отображение уведомления об успешном действии
-  const alertDiv = document.createElement('div');
-  alertDiv.classList.add('alert', 'alert-success');
-  alertDiv.role = 'alert';
-  alertDiv.textContent = message;
-}
 
 function displayErrorNotification(message) {
   // Отображение уведомления об ошибке
@@ -44,41 +48,58 @@ function displayErrorNotification(message) {
   alertDiv.textContent = message;
 }
 
-async function SubmitOrder()
-{
+async function SubmitOrder() {
   const data = {
-  guide_id: 1,
-  route_id: 1,
-  totalCost: document.getElementById('totalCost').value,
-  excursion_start_time :document.getElementById('excursion_start_time').value,
-  excursionDate : document.getElementById('excursionDate').value,
-  excursionDuration : document.getElementById('excursionDuration').value,
-  groupSize: document.getElementById('groupSize').value,
-  guidecost : document.getElementById('guidecost').value,
-  IsdiscountForPensioners :document.getElementById('additionalOption1').checked ? 1 : 0,
-  IsthematicSouvenirs : document.getElementById('additionalOption2').checked ? 1 : 0,
-    };
+    guide_id: selected_guide ? selected_guide.id : null,
+    route_id: selected_route_id,
+    date: document.getElementById('excursionDate').value,
+    time: document.getElementById('excursion_start_time').value+ ":00",
+    duration: parseInt(document.getElementById('excursionDuration').value),
+    persons: parseInt(document.getElementById('groupSize').value),
+    optionFirst: document.getElementById('additionalOption1').checked ? 1 : 0,
+    optionSecond: document.getElementById('additionalOption2').checked ? 1 : 0,
+    price: parseInt(document.getElementById('totalCost').value),
+  };
+  console.log("guide_id " +data.guide_id)
+  console.log("route_id " +data.route_id)
+  console.log("totalCost " +data.price)
+  console.log("excursion_start_time " +data.time)
+  console.log("excursionDate " +data.date)
+  console.log("excursionDuration " +data.duration)
+  console.log("groupSize " +data.persons)
+  console.log("IsdiscountForPensioners " +data.optionFirst)
+  console.log("IsthematicSouvenirs " +data.optionSecond)
+  const formData = new FormData();
+  $.post(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${API_KEY}`,data, alert('Ваша заявка успешно принята!'))
+ 
+/*
+  
+
+  alert("G ID " +data.guide_id)
 
   const formData = new FormData();
   for (const key in data) {
-      formData.append(key, data[key]);
+    formData.append(key, data[key]);
   }
-  
+  console.log(formData)
+  console.log("data "+data)
+  alert('1!')
   try {
+    alert('2!')
     const response = await fetch(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${API_KEY}`, {
-        method: "POST",
-        body: formData
+      method: "POST",
+      body: formData
     });
-    const data = await response.json();
-    if (data && typeof data === 'object') {
-      displaySuccessNotification(`Вы успешно оформили заявку! ID вашей заявки: ${data.id}`);
-      alert(отправлено)
+    alert('3!')
+    const responseData = await response.json();
+    console.log(responseData)
+    alert('4!')
+    if (responseData && typeof responseData === 'object') {
+      alert(`Вы успешно оформили заявку! ID вашей заявки: ${responseData.id}`);
     }
-    
-
-} catch (error) {
-    console.error('Ошибка:', error);
-}
+  } catch (error) {
+    alert('An error occurred while submitting the order:', error);
+  }*/
 }
 
 //Счет цены- это понятно, но со временем и датой непонятно
@@ -153,15 +174,40 @@ function clearFormFields() {
 
 // Назначить обработчик события по клику на кнопку
 
-function show_model_window(guide_name, guide_cost)
+function show_model_window(guide_id)
 {
-  // Найти модальное окно
+
+  for (let i in guides_on_the_route) 
+  {
+    
+    console.log("guide id "+guide_id)
+    console.log(guides_on_the_route[i].id)
+    if(guides_on_the_route[i].id == guide_id)
+    {
+      alert(guide_id)
+      alert(guides_on_the_route[i].id)
+      selected_guide.id = guides_on_the_route[i].id
+      selected_guide.language = guides_on_the_route[i].language
+      selected_guide.name = guides_on_the_route[i].name
+      selected_guide.pricePerHour = guides_on_the_route[i].pricePerHour
+      selected_guide.route_id = guides_on_the_route[i].route_id
+      selected_guide.workExperience = guides_on_the_route[i].workExperience
+    }
+    console.log("id "+ selected_guide.id)
+    console.log("name "+ selected_guide.name)
+    console.log("language "+ selected_guide.language)
+    console.log("pricePerHour "+ selected_guide.pricePerHour)
+    console.log("route_id "+ selected_guide.route_id)
+    console.log("workExperience "+ selected_guide.workExperience)
+
+  }
+    
   var modal = document.querySelector('#requestModal');
   // Отобразить модальное окно
   let routeNameInput = document.getElementById('guideName');
   let guidecost = document.getElementById('guidecost');
-  routeNameInput.value = guide_name
-  guidecost.value = guide_cost
+  routeNameInput.value = selected_guide.name;
+  guidecost.value = selected_guide.pricePerHour;
  $(modal).modal('show');
 }
 
@@ -207,6 +253,7 @@ function fetchRoutesFromApi() {
       .then(response => response.json())
       .then(data => {
         routesData = data;
+        console.log(routesData)
         updateTable();
       })
       .catch(error => console.error('Error fetching route data:', error));
@@ -375,13 +422,16 @@ function highlightSearchResult(searchKeyword) {
 }
 
 function guideDownload(id) {
+    selected_route_id = id;
+    alert(selected_route_id);
     let guideTable = document.querySelector('.guide-table');
     let arroption = [];
     fetch (`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes/${id}/guides?api_key=${API_KEY}`)
         .then(response => response.json())
         .then(response => {
         arroption = [];
-        console.log(response);
+        guides_on_the_route = response;
+        console.log(guides_on_the_route);
         removeOptions(document.getElementById('select_language'));
         guideTable.innerHTML = '';
         for (let i in response) {
@@ -395,7 +445,7 @@ function guideDownload(id) {
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].workExperience}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">${response[i].pricePerHour}</th>
             <th scope="col" id = "${response[i].name}" name = "${i}">
-            <button type="button" id = "guide_btn" name ="${response[i].name}" value = "${response[i].pricePerHour}"  class="btn " data-toggle="modal" data-target="#requestModal">Выбрать</button></th> 
+            <button type="button" id = "guide_btn" value = "${response[i].id}"   class="btn " data-toggle="modal" data-target="#requestModal">Выбрать</button></th> 
             `; //  в последнее значение класса, где кнопка, надо будет сунуть свое значение стиля))
             if ((document.getElementById('guide-input-expfrom').value != '' &&
             document.getElementById('guide-input-expfrom').value > response[i].workExperience) ||
@@ -408,9 +458,8 @@ function guideDownload(id) {
             arroption.push(response[i].language);
         }
         let guide_buttons = document.querySelectorAll('#guide_btn');
-
         for(let i = 0; i< guide_buttons.length; i++){
-          guide_buttons[i].addEventListener('click', () => show_model_window(guide_buttons[i].name, guide_buttons[i].value))
+          guide_buttons[i].addEventListener('click', () => show_model_window(guide_buttons[i].value))
         }
         
         console.log(arroption);
